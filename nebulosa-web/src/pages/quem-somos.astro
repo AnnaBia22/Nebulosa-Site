@@ -1,0 +1,175 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const voluntarias = [
+  {
+    nome: "Nome Sobrenome",
+    cargo: "Cargo",
+    categoria: "Fundadoras",
+    foto: "/logo-nebulosa.png"
+  },
+  {
+    nome: "Nome Sobrenome",
+    cargo: "Cargo",
+    categoria: "Fundadoras",
+    foto: "/logo-nebulosa.png"
+  },
+  {
+    nome: "Nome Sobrenome",
+    cargo: "Cargo",
+    categoria: "Fundadoras",
+    foto: "/logo-nebulosa.png"
+  }
+];
+
+const categorias = ["Fundadoras", "Desenvolvedora Web", "Equipe"];
+---
+
+<Layout title="Nebulosa | Quem Somos">
+  <Header />
+
+  <main class="w-full max-w-6xl mx-auto px-6 py-10 text-[#2F0147] font-acme">
+    <!-- Título da Página -->
+    <h1 class="font-magic text-5xl md:text-6xl text-center text-[#F3A446] mb-8 tracking-wide">
+      Quem Somos
+    </h1>
+
+    <!-- Texto Explicativo Institucional -->
+    <div class="space-y-6 text-justify text-sm leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 mb-16">
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus. Phasellus velit odio, lobortis sed viverra in, placerat sit amet magna.
+      </p>
+      <p>
+        Ut suscipit est erat, vitae finibus risus vestibulum id. Aliquam lacinia bibendum justo eu mattis. Maecenas sit amet quam non tellus fringilla mollis a ac magna.
+      </p>
+      <p>
+        Praesent erat est, pretium at massa sit amet, consequat faucibus est. Aliquam consectetur massa non tortor tempus tincidunt.
+      </p>
+    </div>
+
+    <!-- Seções por Categoria -->
+    {categorias.map((cat) => {
+      const membros = voluntarias.filter(v => v.categoria === cat);
+      if (membros.length === 0) return null;
+
+      return (
+        <section class="mb-24 w-full">
+          <h2 class="font-magic text-4xl md:text-5xl text-[#2F0147] mb-16 text-left">
+            {cat}
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20 justify-items-center w-full">
+            {membros.map((membro) => (
+              <div class="flex flex-col items-center text-center w-full">
+                
+                <!-- Círculo do Vórtice/Buraco Negro (Apenas na foto) -->
+                <div 
+                  class="vortex-avatar relative flex items-center justify-center mb-6 cursor-pointer select-none"
+                  style="width: 200px; height: 200px; border-radius: 50%;"
+                >
+                  <!-- Anel do Vórtice Giratório (Gira no hover/active) -->
+                  <div class="vortex-ring absolute inset-0" style="border-radius: 50%;"></div>
+                  
+                  <!-- Núcleo da Foto que vira Buraco Negro Escuro -->
+                  <div 
+                    class="avatar-core absolute inset-1 flex items-center justify-center p-4 bg-[#EFE3E8] overflow-hidden transition-all duration-500"
+                    style="border-radius: 50%; border: 2px solid rgba(155, 81, 224, 0.3);"
+                  >
+                    <img 
+                      src={membro.foto} 
+                      alt={membro.nome} 
+                      class="w-full h-full object-contain" 
+                      style="border-radius: 50%;"
+                    />
+                  </div>
+                </div>
+
+                <!-- Nome e Cargo Permanecem Sempre Iguais na Página -->
+                <h3 class="text-xl font-bold text-[#2F0147]">
+                  {membro.nome}
+                </h3>
+                <p class="text-base text-[#610F7F] font-semibold mt-0.5">
+                  {membro.cargo}
+                </p>
+
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* --- ANIMAÇÃO DE ROTAÇÃO DO VÓRTICE --- */
+  @keyframes spin-vortex {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Anel de brilho suave inicial */
+  .vortex-ring {
+    background: conic-gradient(
+      from 0deg,
+      #040264 0%,
+      #610F7F 25%,
+      #00d2ff 50%,
+      #2F0147 75%,
+      #040264 100%
+    );
+    filter: blur(10px);
+    opacity: 0.3;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+  }
+
+  /* Sombra roxa padrão quando normal */
+  .vortex-avatar {
+    box-shadow: 0 0 25px rgba(97, 15, 127, 0.5);
+    transition: box-shadow 0.5s ease;
+  }
+
+  /* --- HOVER NO COMPUTADOR E CLIQUE NO CELULAR (.active) --- */
+
+  /* 1. Ativa rotação e brilho do vórtice ao redor do círculo */
+  .vortex-avatar:hover .vortex-ring,
+  .vortex-avatar.active .vortex-ring {
+    opacity: 1;
+    filter: blur(12px);
+    animation: spin-vortex 3s linear infinite;
+  }
+
+  /* 2. O fundo interno da FOTO vira o buraco negro espacial */
+  .vortex-avatar:hover .avatar-core,
+  .vortex-avatar.active .avatar-core {
+    background-color: #080314;
+    border-color: #00d2ff;
+    box-shadow: inset 0 0 20px rgba(0, 210, 255, 0.4);
+  }
+
+  /* 3. Brilho externo neon no círculo */
+  .vortex-avatar:hover,
+  .vortex-avatar.active {
+    box-shadow: 0 0 35px rgba(0, 210, 255, 0.6);
+  }
+</style>
+
+<!-- Script para ativar com 1 toque no celular -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const avatars = document.querySelectorAll('.vortex-avatar');
+    avatars.forEach(avatar => {
+      avatar.addEventListener('click', () => {
+        avatar.classList.toggle('active');
+      });
+    });
+  });
+</script>
