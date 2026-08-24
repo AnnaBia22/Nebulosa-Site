@@ -2,111 +2,137 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Papa from 'papaparse';
 
-const voluntarias = [
-  {
-    nome: "Nome Sobrenome",
-    cargo: "Cargo",
-    categoria: "Fundadoras",
-    foto: "/logo-nebulosa.png"
-  },
-  {
-    nome: "Nome Sobrenome",
-    cargo: "Cargo",
-    categoria: "Fundadoras",
-    foto: "/logo-nebulosa.png"
-  },
-  {
-    nome: "Nome Sobrenome",
-    cargo: "Cargo",
-    categoria: "Fundadoras",
-    foto: "/logo-nebulosa.png"
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWpkTmqQbKMxgCCRSUCG9TZ15pCRIQSE4d_zuyuAkA28D2ORRICKTGZ95OFp86gfcbuClO6uCn5kFl/pub?gid=0&single=true&output=csv";
+
+interface Voluntaria {
+  nome: string;
+  cargo: string;
+  categoria: string;
+  foto: string;
+  bio: string;
+}
+
+function formatDriveUrl(url: string) {
+  if (!url) return "/logo-nebulosa.png";
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
-];
+  return url;
+}
 
-const categorias = ["Fundadoras", "Desenvolvedora Web", "Equipe"];
+let voluntarias: Voluntaria[] = [];
+
+try {
+  const response = await fetch(SHEET_CSV_URL);
+  const csvText = await response.text();
+
+  const parsed = Papa.parse<Voluntaria>(csvText, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
+  voluntarias = parsed.data.filter(v => v.nome && v.nome.trim() !== '');
+} catch (error) {
+  console.error("Erro ao carregar dados dos membros:", error);
+}
+
+const categorias = [...new Set(voluntarias.map(v => v.categoria))];
 ---
 
 <Layout title="Nebulosa | Quem Somos">
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <main class="w-full max-w-6xl mx-auto px-6 py-10 text-[#2F0147] font-acme">
-    <!-- Título da Página -->
-    <h1 class="font-magic text-5xl md:text-6xl text-center text-[#F3A446] mb-8 tracking-wide">
-      Quem Somos
-    </h1>
+    <main class="w-full max-w-6xl mx-auto px-6 py-10 text-[#2F0147] font-acme flex-1">
+      
+      <h1 class="font-magic text-5xl md:text-5xl text-center text-[#F3A446] mb-8 tracking-wide">
+        Quem Somos
+      </h1>
 
-    <!-- Texto Explicativo Institucional -->
-    <div class="space-y-6 text-justify text-sm leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 mb-16">
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus. Phasellus velit odio, lobortis sed viverra in, placerat sit amet magna.
-      </p>
-      <p>
-        Ut suscipit est erat, vitae finibus risus vestibulum id. Aliquam lacinia bibendum justo eu mattis. Maecenas sit amet quam non tellus fringilla mollis a ac magna.
-      </p>
-      <p>
-        Praesent erat est, pretium at massa sit amet, consequat faucibus est. Aliquam consectetur massa non tortor tempus tincidunt.
-      </p>
-    </div>
+      <div class="space-y-6 text-justify text-lg leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 mb-16">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus.
+        </p>
+      </div>
 
-    <!-- Seções por Categoria -->
-    {categorias.map((cat) => {
-      const membros = voluntarias.filter(v => v.categoria === cat);
-      if (membros.length === 0) return null;
-
-      return (
-        <section class="mb-24 w-full">
-          <h2 class="font-magic text-4xl md:text-5xl text-[#2F0147] mb-16 text-left">
-            {cat}
-          </h2>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20 justify-items-center w-full">
-            {membros.map((membro) => (
-              <div class="flex flex-col items-center text-center w-full">
-                
-                <!-- Círculo do Vórtice/Buraco Negro (Apenas na foto) -->
-                <div 
-                  class="vortex-avatar relative flex items-center justify-center mb-6 cursor-pointer select-none"
-                  style="width: 200px; height: 200px; border-radius: 50%;"
-                >
-                  <!-- Anel do Vórtice Giratório (Gira no hover/active) -->
-                  <div class="vortex-ring absolute inset-0" style="border-radius: 50%;"></div>
-                  
-                  <!-- Núcleo da Foto que vira Buraco Negro Escuro -->
-                  <div 
-                    class="avatar-core absolute inset-1 flex items-center justify-center p-4 bg-[#EFE3E8] overflow-hidden transition-all duration-500"
-                    style="border-radius: 50%; border: 2px solid rgba(155, 81, 224, 0.3);"
-                  >
-                    <img 
-                      src={membro.foto} 
-                      alt={membro.nome} 
-                      class="w-full h-full object-contain" 
-                      style="border-radius: 50%;"
-                    />
-                  </div>
-                </div>
-
-                <!-- Nome e Cargo Permanecem Sempre Iguais na Página -->
-                <h3 class="text-xl font-bold text-[#2F0147]">
-                  {membro.nome}
-                </h3>
-                <p class="text-base text-[#610F7F] font-semibold mt-0.5">
-                  {membro.cargo}
-                </p>
-
-              </div>
-            ))}
+      {
+        voluntarias.length === 0 ? (
+          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md">
+            <p class="text-xl font-bold text-[#2F0147] mb-2">
+              Nenhuma voluntária encontrada no momento.
+            </p>
+            <p class="text-sm text-gray-700">
+              Estamos atualizando a lista da nossa equipe!
+            </p>
           </div>
-        </section>
-      );
-    })}
-  </main>
+        ) : (
+          categorias.map((cat) => {
+            const membros = voluntarias.filter(v => v.categoria === cat);
+            if (membros.length === 0) return null;
 
-  <Footer />
+            return (
+              <section class="mb-20 w-full">
+                <h2 class="font-magic text-2xl md:text-3xl text-[#2F0147] mb-8 text-center md:text-left">
+                  {cat}
+                </h2>
+
+                <div class="flex flex-wrap justify-center gap-8 md:gap-12 w-full">
+                  {membros.map((membro) => (
+                    <div class="flex flex-col items-center text-center w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)] max-w-sm bg-[#FDF8F2] p-6 rounded-2xl border border-[#2F0147]/10 shadow-lg">
+                      
+                      <div 
+                        class="vortex-avatar relative flex items-center justify-center mb-6 cursor-pointer select-none overflow-hidden"
+                        style="width: 190px; height: 190px; border-radius: 50%;"
+                      >
+                        <div class="vortex-ring absolute inset-0" style="border-radius: 50%;"></div>
+                        
+                        <div class="avatar-photo absolute inset-1.5 overflow-hidden transition-all duration-700" style="border-radius: 50%;">
+                          <img 
+                            src={formatDriveUrl(membro.foto)} 
+                            alt={membro.nome} 
+                            class="w-full h-full object-cover" 
+                            onerror="this.onerror=null; this.src='/logo-nebulosa.png';"
+                          />
+                        </div>
+
+                        <div class="avatar-onyx-card absolute inset-1.5 bg-[#0B0A10] p-4 flex flex-col items-center justify-center text-center text-gray-200 transition-all duration-700 opacity-0 pointer-events-none" style="border-radius: 50%;">
+                          <div class="onyx-scroll w-full max-h-full overflow-y-auto px-1 py-2 font-sans text-xs leading-relaxed">
+                            {membro.bio ? (
+                              <p>{membro.bio}</p>
+                            ) : (
+                              <p class="text-gray-400 italic">Integrante da equipe {membro.categoria}.</p>
+                            )}
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <h3 class="text-xl font-bold text-[#2F0147]">
+                        {membro.nome}
+                      </h3>
+                      <p class="text-base text-[#610F7F] font-semibold mt-0.5">
+                        {membro.cargo}
+                      </p>
+
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })
+        )
+      }
+
+    </main>
+
+    <Footer />
+  </div>
 </Layout>
 
 <style>
-  /* --- ANIMAÇÃO DE ROTAÇÃO DO VÓRTICE --- */
   @keyframes spin-vortex {
     from {
       transform: rotate(0deg);
@@ -116,7 +142,6 @@ const categorias = ["Fundadoras", "Desenvolvedora Web", "Equipe"];
     }
   }
 
-  /* Anel de brilho suave inicial */
   .vortex-ring {
     background: conic-gradient(
       from 0deg,
@@ -126,43 +151,63 @@ const categorias = ["Fundadoras", "Desenvolvedora Web", "Equipe"];
       #2F0147 75%,
       #040264 100%
     );
-    filter: blur(10px);
-    opacity: 0.3;
+    filter: blur(8px);
+    opacity: 0.2;
     transition: opacity 0.5s ease, filter 0.5s ease;
   }
 
-  /* Sombra roxa padrão quando normal */
   .vortex-avatar {
-    box-shadow: 0 0 25px rgba(97, 15, 127, 0.5);
-    transition: box-shadow 0.5s ease;
+    box-shadow: 0 0 20px rgba(97, 15, 127, 0.3);
+    transition: box-shadow 0.5s ease, transform 0.3s ease;
+    border: 2px solid rgba(155, 81, 224, 0.3);
   }
 
-  /* --- HOVER NO COMPUTADOR E CLIQUE NO CELULAR (.active) --- */
-
-  /* 1. Ativa rotação e brilho do vórtice ao redor do círculo */
   .vortex-avatar:hover .vortex-ring,
   .vortex-avatar.active .vortex-ring {
     opacity: 1;
-    filter: blur(12px);
-    animation: spin-vortex 3s linear infinite;
+    filter: blur(10px);
+    animation: spin-vortex 2.5s linear infinite;
   }
 
-  /* 2. O fundo interno da FOTO vira o buraco negro espacial */
-  .vortex-avatar:hover .avatar-core,
-  .vortex-avatar.active .avatar-core {
-    background-color: #080314;
-    border-color: #00d2ff;
-    box-shadow: inset 0 0 20px rgba(0, 210, 255, 0.4);
+  .vortex-avatar:hover .avatar-photo,
+  .vortex-avatar.active .avatar-photo {
+    opacity: 0;
+    transform: scale(0.2) rotate(180deg);
+    filter: blur(6px);
   }
 
-  /* 3. Brilho externo neon no círculo */
+  .vortex-avatar:hover .avatar-onyx-card,
+  .vortex-avatar.active .avatar-onyx-card {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) rotate(0deg);
+  }
+
   .vortex-avatar:hover,
   .vortex-avatar.active {
-    box-shadow: 0 0 35px rgba(0, 210, 255, 0.6);
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
+    border-color: #00d2ff;
+  }
+
+  .onyx-scroll::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .onyx-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+
+  .onyx-scroll::-webkit-scrollbar-thumb {
+    background: #610F7F;
+    border-radius: 10px;
+  }
+
+  .onyx-scroll::-webkit-scrollbar-thumb:hover {
+    background: #00d2ff;
   }
 </style>
 
-<!-- Script para ativar com 1 toque no celular -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const avatars = document.querySelectorAll('.vortex-avatar');

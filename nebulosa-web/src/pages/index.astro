@@ -9,11 +9,10 @@ import Footer from '../components/Footer.astro';
 
   <main class="max-w-5xl mx-auto px-6 py-10 text-[#2E0854]">
     <h1 class="font-magic text-4xl md:text-2.5xl text-center text-[#F3A446] mb-8 tracking-wide">
-  O que sao feiras?
+  O que são feiras?
 </h1>
 
-    <!-- Texto Explicativo -->
-    <div class="space-y-6 text-justify text-sm leading-relaxed font-normal max-w-4xl mx-auto text-gray-800">
+    <div class="space-y-6 text-justify text-l leading-relaxed font-normal max-w-4xl mx-auto text-gray-800">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus. Phasellus velit odio, lobortis sed viverra in, placerat sit amet magna.
       </p>
@@ -25,58 +24,114 @@ import Footer from '../components/Footer.astro';
       </p>
     </div>
 
-    <!-- Chamada Cronograma -->
     <div class="text-center my-12">
-      <a href="/cronograma" class="font-fredoka text-xl text-[#2E0854] underline decoration-2 underline-offset-4 hover:text-[#F3A446] transition-colors">
-        Cheque o cronograma das proximas feiras!!
+      <a href="/cronograma" class="text-xl text-[#2E0854] underline decoration-2 underline-offset-4 hover:text-[#F3A446] transition-colors">
+        Cheque o cronograma das próximas feiras!!
       </a>
     </div>
 
-    <!-- Seção Fale Conosco -->
-    <section class="mt-16">
-      <h2 class="font-fredoka text-5xl text-center text-[#F3A446] mb-10">
-        Fale conosco
-      </h2>
+<section id="fale-conosco" class="mt-16 scroll-mt-24">
+  <h2 class="font-magic text-3xl text-center text-[#F3A446] mb-10">
+    Fale conosco
+  </h2>
 
-      <!-- 3 Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Card 1: Telefone/WhatsApp -->
-        <div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm">
-          <svg class="w-10 h-10 mb-4 text-[#2E0854]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.27c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.27 1.11l-2.2 2.2z"/>
-          </svg>
-          <p class="font-bold text-xs mb-6">+55 99 99999 9999</p>
-          <p class="font-bold text-xs">Mande mensagem pelo Whatsapp!</p>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    
+    <!-- Card 1: WhatsApp -->
+    <a 
+      href="https://wa.me/5599999999999" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+    >
+      <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.27c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.27 1.11l-2.2 2.2z"/>
+      </svg>
+      <p class="font-bold text-xs mb-6 text-[#2F0147]">+55 99 99999 9999</p>
+      <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">Mande mensagem pelo Whatsapp!</p>
+    </a>
 
-        <!-- Card 2: E-mail / LinkedIn -->
-        <div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm space-y-4">
-          <svg class="w-10 h-10 text-[#2E0854]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-          </svg>
-          <p class="font-bold text-xs underline">projeto@gmail.com</p>
-          <p class="font-bold text-xs">LinkedIn</p>
-        </div>
+<div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm space-y-4 hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+  <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+  </svg>
+  
+  <button 
+    id="copy-email-btn"
+    class="font-bold text-xs text-[#2F0147] underline hover:text-[#F3A446] transition-colors cursor-pointer bg-transparent border-0 p-0"
+  >
+    <span id="email-text">projetonebulosaa@gmail.com</span>
+  </button>
+  
+  <a 
+    href="https://linkedin.com" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="font-bold text-xs text-[#610F7F] hover:text-[#F3A446] transition-colors"
+  >
+    LinkedIn
+  </a>
+</div>
 
-        <!-- Card 3: Instagram -->
-        <div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm">
-          <svg class="w-10 h-10 mb-4 text-[#2E0854]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-          <p class="font-bold text-xs mb-6">@instagramdoprojeto</p>
-          <p class="font-bold text-xs">Mande uma DM!</p>
-        </div>
-      </div>
+<a 
+  href="https://instagram.com/projeto__nebulosa" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+>
+  <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+  <p class="font-bold text-xs mb-6 text-[#2F0147]">@projeto__nebulosa</p>
+  <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">Mande uma DM!</p>
+</a>
 
-      <!-- Banner Discord -->
-      <div class="bg-[#EFE3E8] p-6 rounded-3xl text-center space-y-1 shadow-sm">
-        <p class="font-bold text-sm">Junte-se ao nosso Discord para mais informacoes!!!</p>
-        <p class="font-bold text-[#2E0854] text-xs underline cursor-pointer hover:text-[#F3A446]">
-          hiperlink sendo o nome do server
-        </p>
-      </div>
-    </section>
+  </div>
+
+<a 
+  href="https://discord.gg/36zQnH4nW" 
+  target="_blank" 
+  rel="noopener noreferrer" 
+  class="bg-[#EFE3E8] p-6 rounded-3xl text-center space-y-1 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group block cursor-pointer"
+>
+  <p class="font-bold text-sm text-[#2F0147]">Junte-se ao nosso Discord para mais informações!!!</p>
+  <span 
+    class="inline-block font-bold text-[#2E0854] text-xs underline group-hover:text-[#F3A446] transition-colors"
+  >
+    Servidor do Projeto Nebulosa
+  </span>
+</a>
+</section>
   </main>
 
   <Footer />
 </Layout>
+
+<script>
+  const emailBtn = document.getElementById('copy-email-btn');
+  const emailText = document.getElementById('email-text');
+  const emailValue = 'projetonebulosaa@gmail.com';
+
+  emailBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(emailValue);
+      
+      if (emailText && emailBtn) {
+        const originalText = emailText.textContent;
+
+        emailBtn.classList.remove('hover:text-[#F3A446]');
+        
+        emailText.textContent = 'E-mail copiado!';
+        emailText.classList.add('text-[#2F0147]');
+
+        setTimeout(() => {
+          emailText.textContent = originalText;
+          emailText.classList.remove('text-[#2F0147]');
+          emailBtn.classList.add('hover:text-[#F3A446]');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Falha ao copiar e-mail: ', err);
+    }
+  });
+</script>

@@ -1,9 +1,6 @@
 @import "tailwindcss";
-
-/* Importa a fonte Acme do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 
-/* Registra a fonte Magic Sound */
 @font-face {
   font-family: 'Magic Sound';
   src: url('/fonts/MagicSound.ttf') format('truetype');
@@ -17,14 +14,12 @@
   --font-magic: 'Magic Sound', cursive, sans-serif;
 }
 
-/* Aplica a Acme como fonte padrão em todo o site (inclusive nav, botões e links) */
 html, body {
   font-family: var(--font-acme);
   background-color: #FFF5EA;
   color: #2F0147;
 }
 
-/* Classes utilitárias */
 .font-acme {
   font-family: var(--font-acme) !important;
 }
@@ -37,7 +32,6 @@ html, body {
   --font-title: 'Magic Sound', cursive, sans-serif;
   --font-body: 'Acme', sans-serif;
   
-  /* Cores Oficiais Nebulosa */
   --color-nebulosa-ink: #011A28;
   --color-nebulosa-navy: #040264;
   --color-nebulosa-yellow: #F1F1F9;
@@ -48,6 +42,6 @@ html, body {
 
 body {
   font-family: var(--font-body);
-  background-color: #FFF5EA; /* Fundo levemente creme do Figma */
+  background-color: #FFF5EA; 
   color: #2F0147;
 }

@@ -2,93 +2,99 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Papa from 'papaparse';
 
-// Dados da tabela de cronograma
-const eventos = [
-  {
-    datas: "10/03 - 15/03",
-    feira: "Feira de Ciências & Tecnologia",
-    premios: "Credenciamento + Medalhas de Ouro/Prata",
-    dados: "Inscrições abertas até 01/03. Etapa presencial."
-  },
-  {
-    datas: "22/04 - 25/04",
-    feira: "Olimpíada Brasileira de Informática (OBI)",
-    premios: "Certificado Nacional + Bolsas",
-    dados: "Prova online na primeira fase. Gratuito."
-  },
-  {
-    datas: "12/05 - 18/05",
-    feira: "Mostra Internacional de Ciência",
-    premios: "Troféus e Apoio Financeiro",
-    dados: "Submissão de artigos para avaliação."
-  },
-  {
-    datas: "05/06 - 10/06",
-    feira: "Hackathon Nebulosa 2026",
-    premios: "Prêmio em dinheiro + Mentoria",
-    dados: "Equipes de 2 a 4 pessoas. Foco em tecnologia."
-  }
-];
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTOSEjbQJnA9monK7Zy-vRXZjNlvOGK3qg3kZuk-KnkUdNIpl_u0o07fswpxS0vQLf1dZ9QECAzhhY/pub?gid=0&single=true&output=csv";
+
+interface Evento {
+  datas: string;
+  feira: string;
+  premios: string;
+  dados: string;
+}
+
+let eventos: Evento[] = [];
+
+try {
+  const response = await fetch(SHEET_CSV_URL);
+  const csvText = await response.text();
+
+  const parsed = Papa.parse<Evento>(csvText, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
+  // Filtra linhas totalmente vazias ou sem o nome da feira
+  eventos = parsed.data.filter(e => e.feira && e.feira.trim() !== '');
+} catch (error) {
+  console.error("Erro ao carregar dados do Google Sheets:", error);
+}
 ---
 
 <Layout title="Nebulosa | Cronograma">
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <main class="w-full max-w-6xl mx-auto px-6 py-10 text-[#2F0147] font-acme">
-    
-    <!-- Título da Página -->
-    <h1 class="font-magic text-5xl md:text-6xl text-center text-[#F3A446] mb-8 tracking-wide">
-      Cronograma
-    </h1>
+    <main class="w-full max-w-6xl mx-auto px-6 py-10 text-[#2F0147] font-acme flex-1">
+      
+      <h1 class="font-magic text-5xl md:text-6xl text-center text-[#F3A446] mb-8 tracking-wide">
+        Cronograma
+      </h1>
 
-    <!-- Texto Explicativo Institucional -->
-    <p class="text-justify text-sm leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 mb-12">
-      Texto de introdução dos cronogramas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus. Phasellus velit odio, lobortis sed viverra in, placerat sit amet magna. Aenean eget rutrum tortor.
-    </p>
+      <p class="text-justify text-lg leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 mb-12">
+        Texto de introdução dos cronogramas. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
 
-    <!-- Tabela Estilizada -->
-    <div class="w-full overflow-x-auto rounded-2xl shadow-xl border border-[#2F0147]/20 bg-[#FDF8F2]">
-      <table class="w-full text-left border-collapse">
-        
-        <!-- Cabeçalho -->
-        <thead>
-          <tr class="bg-[#2F0147] text-[#F3A446] text-lg font-bold tracking-wider">
-            <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/5">Datas</th>
-            <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Nome da Feira</th>
-            <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Prêmios?</th>
-            <th class="py-4 px-6 border-b border-[#610F7F]/40 w-3/12">Dados</th>
-          </tr>
-        </thead>
+      {
+        eventos.length === 0 ? (
+          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md">
+            <p class="text-xl font-bold text-[#2F0147] mb-2">
+              Não há feiras em andamento no momento.
+            </p>
+            <p class="text-sm text-gray-700">
+              Fique de olho em nossas redes sociais e no Discord para novidades em breve!
+            </p>
+          </div>
+        ) : (
+          <div class="w-full overflow-x-auto rounded-2xl shadow-xl border border-[#2F0147]/20 bg-[#FDF8F2]">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#2F0147] text-[#F3A446] text-lg font-bold tracking-wider">
+                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/5">Datas</th>
+                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Nome da Feira</th>
+                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Prêmios?</th>
+                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-3/12">Dados</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm font-sans font-medium text-[#2F0147]">
+                {eventos.map((item, index) => (
+                  <tr 
+                    class={`transition-colors duration-200 border-b border-[#2F0147]/10 hover:bg-[#EFE3E8]/80 ${
+                      index % 2 === 0 ? 'bg-[#FDF8F2]' : 'bg-[#F7EEF2]'
+                    }`}
+                  >
+                    <td class="py-4 px-6 font-semibold text-[#610F7F] whitespace-nowrap">
+                      {item.datas}
+                    </td>
+                    <td class="py-4 px-6 font-bold text-[#2F0147]">
+                      {item.feira}
+                    </td>
+                    <td class="py-4 px-6 text-gray-800">
+                      {item.premios}
+                    </td>
+                    <td class="py-4 px-6 text-gray-700">
+                      {item.dados}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      }
 
-        <!-- Corpo da Tabela -->
-        <tbody class="text-sm font-sans font-medium text-[#2F0147]">
-          {eventos.map((item, index) => (
-            <tr 
-              class={`transition-colors duration-200 border-b border-[#2F0147]/10 hover:bg-[#EFE3E8]/80 ${
-                index % 2 === 0 ? 'bg-[#FDF8F2]' : 'bg-[#F7EEF2]'
-              }`}
-            >
-              <td class="py-4 px-6 font-semibold text-[#610F7F] whitespace-nowrap">
-                {item.datas}
-              </td>
-              <td class="py-4 px-6 font-bold text-[#2F0147]">
-                {item.feira}
-              </td>
-              <td class="py-4 px-6 text-gray-800">
-                {item.premios}
-              </td>
-              <td class="py-4 px-6 text-gray-700">
-                {item.dados}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+    </main>
 
-      </table>
-    </div>
-
-  </main>
-
-  <Footer />
+    <Footer />
+  </div>
 </Layout>

@@ -10,12 +10,51 @@
     </a>
   </div>
 
-  <!-- Barra de Navegação com font-acme explícita -->
-  <nav class="bg-[#2F0147] text-[#F1F1F9] py-3 px-8 font-acme">
-    <div class="max-w-6xl mx-auto flex gap-8 text-lg tracking-wide">
-      <a href="/quem-somos" class="hover:text-[#F3A446] transition-colors font-acme">Quem Somos</a>
-      <a href="/cronograma" class="hover:text-[#F3A446] transition-colors font-acme">Cronograma</a>
-      <a href="/noticias" class="hover:text-[#F3A446] transition-colors font-acme">Notícias</a>
+  <!-- Barra de Navegação com padding de 10px nas laterais -->
+  <nav class="bg-[#2F0147] text-[#F1F1F9] py-3 px-[30px] font-acme">
+    <div class="w-full flex items-center justify-start gap-6 text-lg tracking-wide">
+      
+      <!-- Ícone da Casinha (Home) -->
+      <a 
+        href="/" 
+        aria-label="Página Inicial"
+        class="flex items-center transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(243,164,70,1)]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-current text-[#F1F1F9]" viewBox="0 0 24 24">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </a>
+
+      <!-- Links das Páginas -->
+      <a 
+        href="/quem-somos" 
+        class="transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(243,164,70,1)]"
+      >
+        Quem Somos
+      </a>
+      
+      <a 
+        href="/cronograma" 
+        class="transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(243,164,70,1)]"
+      >
+        Cronograma
+      </a>
+      
+      <a 
+        href="/noticias" 
+        class="transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(243,164,70,1)]"
+      >
+        Notícias
+      </a>
+
+      <!-- Fale Conosco -->
+      <a 
+        href="/#fale-conosco" 
+        class="transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(243,164,70,1)]"
+      >
+        Fale Conosco
+      </a>
+
     </div>
   </nav>
 </header>

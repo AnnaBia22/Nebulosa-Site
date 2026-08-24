@@ -1,11 +1,61 @@
----
----
+<footer class="bg-[#EAE0EB] text-[#2E0854] py-6 mt-16 text-center text-xs space-y-2 font-acme">
+  
+  <p class="font-semibold text-sm">
+    <button 
+      id="btn-gmail"
+      class="hover:text-[#F3A446] transition-colors cursor-pointer bg-transparent border-0 p-0 font-acme font-semibold text-sm text-[#2E0854]"
+    >
+      projetonebulosaa@gmail.com
+    </button>
+  </p>
 
-<footer class="bg-[#EAE0EB] text-[#2E0854] py-6 mt-16 text-center text-xs space-y-2">
-  <p class="font-semibold text-sm">emaildoprojeto@gmail.com</p>
-  <p class="font-semibold text-sm">@instagram</p>
-  <div class="flex justify-between max-w-6xl mx-auto px-4 pt-4 text-[10px] text-gray-500 border-t border-purple-200/50">
-    <span>Layout por Anna Travascio</span>
-    <span>Mit License</span>
+  <p class="font-semibold text-sm">
+    <a 
+      href="https://instagram.com/projeto__nebulosa" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="hover:text-[#F3A446] transition-colors"
+    >
+      @projeto__nebulosa
+    </a>
+  </p>
+
+  <div class="relative w-full pt-4 text-[10px] text-gray-500 border-t border-purple-200/50 flex items-center justify-center">
+    
+    <!-- Texto posicionado a 30px da extrema esquerda -->
+    <span class="absolute left-[30px]">
+      Layout por  
+      <a 
+        href="https://github.com/AnnaBia22" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="text-gray-500 hover:underline "
+      >
+        &nbsp;Anna Travascio
+      </a>
+    </span>
+
+    <span>
+      <a 
+        href="https://opensource.org/licenses/MIT" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="hover:text-[#2E0854] transition-colors"
+      >
+        MIT License
+      </a>
+    </span>
+
   </div>
 </footer>
+
+<script>
+  function abrirGmail(email: string, msg: string = '') {
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&body=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  document.getElementById('btn-gmail')?.addEventListener('click', () => {
+    abrirGmail('projetonebulosaa@gmail.com');
+  });
+</script>
