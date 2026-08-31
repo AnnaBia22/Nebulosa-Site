@@ -9,18 +9,24 @@ import Footer from '../components/Footer.astro';
 
   <main class="max-w-5xl mx-auto px-6 py-10 text-[#2E0854]">
     <h1 class="font-magic text-4xl md:text-2.5xl text-center text-[#F3A446] mb-8 tracking-wide">
-  O que são feiras?
-</h1>
+      O que são feiras?
+    </h1>
 
-    <div class="space-y-6 text-justify text-l leading-relaxed font-normal max-w-4xl mx-auto text-gray-800">
+    <div class="space-y-6 text-justify text-l leading-relaxed font-normal max-w-4xl mx-auto text-gray-800 indent-8">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in quam nunc. Donec magna arcu, lacinia non commodo in, condimentum eget risus. Phasellus velit odio, lobortis sed viverra in, placerat sit amet magna.
+        As feiras científicas são espaços destinados à divulgação e à exposição de pesquisas e projetos desenvolvidos por estudantes. Seu objetivo é promover o caráter prático e experimental do ensino de Ciências, incentivando os participantes a investigar problemas e perguntas de seu interesse por meio da aplicação de métodos científicos.
       </p>
       <p>
-        Ut suscipit est erat, vitae finibus risus vestibulum id. Aliquam lacinia bibendum justo eu mattis. Maecenas sit amet quam non tellus fringilla mollis a ac magna.
+        Durante o desenvolvimento de um projeto, os estudantes passam por diferentes etapas, como a escolha e delimitação do tema, a elaboração da pergunta de pesquisa, o planejamento da metodologia, a coleta e análise de dados e, por fim, a apresentação dos resultados. Esse processo permite que eles aprofundem seus conhecimentos científicos e desenvolvam habilidades como pensamento crítico, criatividade, comunicação, autonomia e resolução de problemas.
       </p>
       <p>
-        Praesent erat est, pretium at massa sit amet, consequat faucibus est. Aliquam consectetur massa non tortor tempus tincidunt.
+        Os projetos apresentados podem abordar diferentes áreas do conhecimento, como Ciências Naturais, Ciências Sociais, Tecnologia, Engenharia e Matemática, e assumir diferentes formatos, incluindo experimentos, pesquisas, protótipos, dispositivos, softwares e outras soluções inovadoras.
+      </p>
+      <p>
+        Durante as feiras, os projetos são apresentados em estandes e avaliados por professores, pesquisadores e profissionais de diferentes áreas. Esse contato proporciona aos estudantes a oportunidade de compartilhar suas descobertas, receber novos pontos de vista, discutir seus resultados e conhecer outras pesquisas e possibilidades dentro da ciência.
+      </p>
+      <p>
+        Assim, as feiras são importantes ferramentas para tornar a ciência mais acessível e incentivar jovens a se reconhecerem como participantes ativos na construção do conhecimento científico.
       </p>
     </div>
 
@@ -30,78 +36,61 @@ import Footer from '../components/Footer.astro';
       </a>
     </div>
 
-<section id="fale-conosco" class="mt-16 scroll-mt-24">
-  <h2 class="font-magic text-3xl text-center text-[#F3A446] mb-10">
-    Fale conosco
-  </h2>
+    <section id="fale-conosco" class="mt-16 scroll-mt-24">
+      <h2 class="font-magic text-3xl text-center text-[#F3A446] mb-10">
+        Fale conosco
+      </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    
-    <!-- Card 1: WhatsApp -->
-    <a 
-      href="https://wa.me/5599999999999" 
-      target="_blank" 
-      rel="noopener noreferrer"
-      class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
-    >
-      <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.27c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.27 1.11l-2.2 2.2z"/>
-      </svg>
-      <p class="font-bold text-xs mb-6 text-[#2F0147]">+55 99 99999 9999</p>
-      <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">Mande mensagem pelo Whatsapp!</p>
-    </a>
+      <!-- Grid ajustado para 2 colunas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        
+        <!-- Card 1: E-mail -->
+        <div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+          <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          
+          <button 
+            id="copy-email-btn"
+            class="font-bold text-xs mb-2 text-[#2F0147] underline hover:text-[#F3A446] transition-colors cursor-pointer bg-transparent border-0 p-0"
+          >
+            <span id="email-text">projetonebulosaa@gmail.com</span>
+          </button>
+          
+          <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">
+            Clique acima para copiar nosso e-mail!
+          </p>
+        </div>
 
-<div class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm space-y-4 hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
-  <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-  </svg>
-  
-  <button 
-    id="copy-email-btn"
-    class="font-bold text-xs text-[#2F0147] underline hover:text-[#F3A446] transition-colors cursor-pointer bg-transparent border-0 p-0"
-  >
-    <span id="email-text">projetonebulosaa@gmail.com</span>
-  </button>
-  
-  <a 
-    href="https://linkedin.com" 
-    target="_blank" 
-    rel="noopener noreferrer" 
-    class="font-bold text-xs text-[#610F7F] hover:text-[#F3A446] transition-colors"
-  >
-    LinkedIn
-  </a>
-</div>
+        <!-- Card 2: Instagram -->
+        <a 
+          href="https://instagram.com/projeto__nebulosa" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+        >
+          <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          <p class="font-bold text-xs mb-2 text-[#2F0147]">@projeto__nebulosa</p>
+          <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">Mande uma DM!</p>
+        </a>
 
-<a 
-  href="https://instagram.com/projeto__nebulosa" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  class="bg-[#EFE3E8] p-8 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
->
-  <svg class="w-10 h-10 mb-4 text-[#2E0854] group-hover:text-[#F3A446] transition-colors" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-  </svg>
-  <p class="font-bold text-xs mb-6 text-[#2F0147]">@projeto__nebulosa</p>
-  <p class="font-bold text-xs text-[#610F7F] group-hover:text-[#F3A446] transition-colors">Mande uma DM!</p>
-</a>
+      </div>
 
-  </div>
-
-<a 
-  href="https://discord.gg/36zQnH4nW" 
-  target="_blank" 
-  rel="noopener noreferrer" 
-  class="bg-[#EFE3E8] p-6 rounded-3xl text-center space-y-1 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group block cursor-pointer"
->
-  <p class="font-bold text-sm text-[#2F0147]">Junte-se ao nosso Discord para mais informações!!!</p>
-  <span 
-    class="inline-block font-bold text-[#2E0854] text-xs underline group-hover:text-[#F3A446] transition-colors"
-  >
-    Servidor do Projeto Nebulosa
-  </span>
-</a>
-</section>
+      <!-- Banner Discord -->
+      <a 
+        href="https://discord.gg/36zQnH4nW" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="bg-[#EFE3E8] p-6 rounded-3xl text-center space-y-1 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group block cursor-pointer"
+      >
+        <p class="font-bold text-sm text-[#2F0147]">Junte-se ao nosso Discord para mais informações!!!</p>
+        <span class="inline-block font-bold text-[#2E0854] text-xs underline group-hover:text-[#F3A446] transition-colors">
+          Servidor do Projeto Nebulosa
+        </span>
+      </a>
+    </section>
   </main>
 
   <Footer />
