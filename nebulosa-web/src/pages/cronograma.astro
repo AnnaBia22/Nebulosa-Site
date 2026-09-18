@@ -9,7 +9,6 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTOSEjbQ
 interface Evento {
   datas: string;
   feira: string;
-  premios: string;
   dados: string;
 }
 
@@ -78,9 +77,6 @@ try {
                     </td>
                     <td class="py-4 px-6 font-bold text-[#2F0147]">
                       {item.feira}
-                    </td>
-                    <td class="py-4 px-6 text-gray-800">
-                      {item.premios}
                     </td>
                     <td class="py-4 px-6 text-gray-700">
                       {item.dados}
