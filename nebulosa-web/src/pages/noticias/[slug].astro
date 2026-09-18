@@ -2,47 +2,90 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Papa from 'papaparse';
+
+const SHEET_NEWS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSFBphLgXDo2hNxvcVQ2vcJyYLplmKVVdtWQxj_9vYrT96mOuATdk6ZZug5LaBlh1oq5ruyA6on0wZy/pub?gid=0&single=true&output=csv";
+
+interface Noticia {
+  slug: string;
+  titulo: string;
+  subtitulo: string;
+  data: string;
+  hora: string;
+  autora: string;
+  instagram: string;
+  categoria: string;
+  imagem: string;
+  conteudo: string;
+}
+
+function formatDriveUrl(url: string) {
+  if (!url) return "/logo-nebulosa.png";
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
+  }
+  return url;
+}
+
+export async function getStaticPaths() {
+  const SHEET_NEWS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSFBphLgXDo2hNxvcVQ2vcJyYLplmKVVdtWQxj_9vYrT96mOuATdk6ZZug5LaBlh1oq5ruyA6on0wZy/pub?gid=0&single=true&output=csv";
+  
+  try {
+    const response = await fetch(`${SHEET_NEWS_URL}&t=${Date.now()}`);
+    const csvText = await response.text();
+
+    const parsed = Papa.parse<Noticia>(csvText, {
+      header: true,
+      skipEmptyLines: true,
+    });
+
+    return parsed.data
+      .filter((n) => n.slug && n.slug.trim() !== '')
+      .map((noticia) => ({
+        params: { slug: noticia.slug.trim().toLowerCase() },
+        props: { noticia },
+      }));
+  } catch (error) {
+    console.error("Erro no getStaticPaths de notícias:", error);
+    return [];
+  }
+}
+
+const { noticia } = Astro.props;
+
+if (!noticia) {
+  return Astro.redirect('/404');
+}
+
+const paragrafos = noticia.conteudo ? noticia.conteudo.split('\n\n') : [];
 ---
 
-<Layout title="Nebulosa | Notícia">
+<Layout title={`Nebulosa | ${noticia.titulo || 'Notícia'}`}>
   <div class="min-h-screen flex flex-col bg-[#FDF8F2]">
     <Header />
 
     <main class="w-full max-w-4xl mx-auto px-6 py-10 text-[#2F0147] flex-1">
-      
-      <!-- Estado de Carregamento -->
-      <div id="loading-state" class="w-full max-w-xl mx-auto my-12 p-6 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-sm">
-        <p class="text-lg font-bold text-[#2F0147] mb-1">
-          Carregando notícia...
-        </p>
-        <p class="text-xs text-gray-700 font-sans">
-          Aguarde um instante enquanto buscamos as informações atualizadas.
-        </p>
-      </div>
-
-      <!-- Estado de Erro / Não Encontrada -->
-      <div id="error-state" class="hidden w-full max-w-xl mx-auto my-12 p-6 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-sm">
-        <p class="text-lg font-bold text-[#2F0147] mb-1">
-          Notícia não encontrada.
-        </p>
-        <p class="text-xs text-gray-700 font-sans">
-          Verifique o endereço digitado ou volte para a lista de notícias.
-        </p>
-      </div>
-
-      <!-- Conteúdo da Notícia -->
-      <div id="article-content" class="hidden">
+      <article>
         <header class="mb-8">
-          <h1 id="noticia-titulo" class="font-magic text-4xl md:text-5xl text-[#2F0147] mb-3 leading-tight">
+          <h1 class="font-magic text-4xl md:text-5xl text-[#2F0147] mb-3 leading-tight">
+            {noticia.titulo}
           </h1>
 
-          <p id="noticia-subtitulo" class="hidden text-lg md:text-xl font-bold text-gray-800 mb-4 font-sans">
-          </p>
+          {noticia.subtitulo && (
+            <p class="text-lg md:text-xl font-bold text-gray-800 mb-4 font-sans">
+              {noticia.subtitulo}
+            </p>
+          )}
 
           <div class="flex flex-wrap items-center justify-between text-xs text-gray-600 border-b border-[#2F0147]/10 pb-4 font-sans gap-4">
             <div>
-              <p id="noticia-autora" class="font-semibold text-gray-700"></p>
-              <p id="noticia-data-hora"></p>
+              <p class="font-semibold text-gray-700">
+                Por {noticia.autora || 'Nebulosa'}{noticia.instagram ? `, ${noticia.instagram}` : ''}
+              </p>
+              <p>
+                {noticia.data}{noticia.hora ? ` às ${noticia.hora}` : ''}
+              </p>
             </div>
 
             <div class="flex items-center gap-3 text-gray-700 shrink-0">
@@ -69,8 +112,7 @@ import Footer from '../../components/Footer.astro';
               </a>
 
               <a 
-                id="wsp-btn"
-                href="#" 
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(noticia.titulo)}`}
                 target="_blank" 
                 rel="noopener noreferrer" 
                 class="hover:text-[#610F7F] transition-colors p-1 flex items-center justify-center shrink-0" 
@@ -84,19 +126,25 @@ import Footer from '../../components/Footer.astro';
           </div>
         </header>
 
-        <div id="noticia-imagem-container" class="hidden w-full mb-10 rounded-lg overflow-hidden shadow-md max-h-[480px]">
-          <img 
-            id="noticia-imagem"
-            src="" 
-            alt="" 
-            class="w-full h-full object-cover"
-          />
+        {noticia.imagem && (
+          <div class="w-full mb-10 rounded-lg overflow-hidden shadow-md max-h-[480px]">
+            <img 
+              src={formatDriveUrl(noticia.imagem)} 
+              alt={noticia.titulo} 
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='/logo-nebulosa.png';"
+            />
+          </div>
+        )}
+
+        <div class="space-y-6 text-justify text-base md:text-lg leading-relaxed font-sans font-normal text-gray-900">
+          {paragrafos.length > 0 ? (
+            paragrafos.map(p => <p>{p}</p>)
+          ) : (
+            <p>{noticia.conteudo}</p>
+          )}
         </div>
-
-        <article id="noticia-conteudo" class="space-y-6 text-justify text-base md:text-lg leading-relaxed font-sans font-normal text-gray-900">
-        </article>
-      </div>
-
+      </article>
     </main>
 
     <Footer />
@@ -104,145 +152,15 @@ import Footer from '../../components/Footer.astro';
 </Layout>
 
 <script>
-  import Papa from 'papaparse';
-
-  const SHEET_NEWS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSFBphLgXDo2hNxvcVQ2vcJyYLplmKVVdtWQxj_9vYrT96mOuATdk6ZZug5LaBlh1oq5ruyA6on0wZy/pub?gid=0&single=true&output=csv";
-
-  interface Noticia {
-    slug: string;
-    titulo: string;
-    subtitulo: string;
-    data: string;
-    hora: string;
-    autora: string;
-    instagram: string;
-    categoria: string;
-    imagem: string;
-    conteudo: string;
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copiado!');
+      }
+    });
   }
-
-  function formatDriveUrl(url: string) {
-    if (!url) return "/logo-nebulosa.png";
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      return `https://lh3.googleusercontent.com/d/${match[1]}`;
-    }
-    return url;
-  }
-
-  async function carregarNoticia() {
-    const loadingState = document.getElementById('loading-state');
-    const errorState = document.getElementById('error-state');
-    const articleContent = document.getElementById('article-content');
-
-    // Obtém o slug diretamente da URL (ex: /noticias/minha-noticia -> minha-noticia)
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const currentSlug = pathSegments[pathSegments.length - 1];
-
-    if (!currentSlug) {
-      if (loadingState) loadingState.classList.add('hidden');
-      if (errorState) errorState.classList.remove('hidden');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${SHEET_NEWS_URL}&t=${Date.now()}`);
-      const csvText = await response.text();
-
-      const parsed = Papa.parse<Noticia>(csvText, {
-        header: true,
-        skipEmptyLines: true,
-      });
-
-      const noticia = parsed.data.find(
-        n => n.slug && n.slug.trim().toLowerCase() === currentSlug.trim().toLowerCase()
-      );
-
-      if (!noticia) {
-        if (loadingState) loadingState.classList.add('hidden');
-        if (errorState) errorState.classList.remove('hidden');
-        return;
-      }
-
-      // Atualiza o título da aba do navegador
-      document.title = `Nebulosa | ${noticia.titulo || 'Notícia'}`;
-
-      // Preenche os campos textuais
-      const elTitulo = document.getElementById('noticia-titulo');
-      if (elTitulo) elTitulo.textContent = noticia.titulo || '';
-
-      const elSubtitulo = document.getElementById('noticia-subtitulo');
-      if (elSubtitulo && noticia.subtitulo) {
-        elSubtitulo.textContent = noticia.subtitulo;
-        elSubtitulo.classList.remove('hidden');
-      }
-
-      const elAutora = document.getElementById('noticia-autora');
-      if (elAutora) {
-        let autoraText = `Por ${noticia.autora || 'Nebulosa'}`;
-        if (noticia.instagram) autoraText += `, ${noticia.instagram}`;
-        elAutora.textContent = autoraText;
-      }
-
-      const elDataHora = document.getElementById('noticia-data-hora');
-      if (elDataHora) {
-        let dataText = noticia.data || '';
-        if (noticia.hora) dataText += ` às ${noticia.hora}`;
-        elDataHora.textContent = dataText;
-      }
-
-      // Preenche a imagem principal
-      if (noticia.imagem) {
-        const elImgContainer = document.getElementById('noticia-imagem-container');
-        const elImg = document.getElementById('noticia-imagem') as HTMLImageElement;
-        if (elImgContainer && elImg) {
-          elImg.src = formatDriveUrl(noticia.imagem);
-          elImg.alt = noticia.titulo || '';
-          elImg.onerror = () => { elImg.src = '/logo-nebulosa.png'; };
-          elImgContainer.classList.remove('hidden');
-        }
-      }
-
-      // Preenche o conteúdo formatado em parágrafos
-      const elConteudo = document.getElementById('noticia-conteudo');
-      if (elConteudo) {
-        const paragrafos = noticia.conteudo ? noticia.conteudo.split('\n\n') : [];
-        if (paragrafos.length > 0) {
-          elConteudo.innerHTML = paragrafos.map(p => `<p>${p}</p>`).join('');
-        } else {
-          elConteudo.innerHTML = `<p>${noticia.conteudo || ''}</p>`;
-        }
-      }
-
-      // Botão de compartilhamento
-      const shareBtn = document.getElementById('share-btn');
-      if (shareBtn) {
-        shareBtn.onclick = () => {
-          if (navigator.share) {
-            navigator.share({ title: document.title, url: window.location.href });
-          } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link copiado!');
-          }
-        };
-      }
-
-      // Link do WhatsApp
-      const wspBtn = document.getElementById('wsp-btn') as HTMLAnchorElement;
-      if (wspBtn) {
-        wspBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(noticia.titulo + ' - ' + window.location.href)}`;
-      }
-
-      // Exibe o conteúdo e esconde o carregamento
-      if (loadingState) loadingState.classList.add('hidden');
-      if (articleContent) articleContent.classList.remove('hidden');
-
-    } catch (error) {
-      console.error("Erro ao carregar os detalhes da notícia:", error);
-      if (loadingState) loadingState.classList.add('hidden');
-      if (errorState) errorState.classList.remove('hidden');
-    }
-  }
-
-  carregarNoticia();
 </script>
