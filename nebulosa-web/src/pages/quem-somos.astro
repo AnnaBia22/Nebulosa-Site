@@ -39,7 +39,11 @@ try {
   console.error("Erro ao carregar dados dos membros:", error);
 }
 
-const categorias = [...new Set(voluntarias.map(v => v.categoria))];
+// Verificação da lista e extração das categorias
+const temVoluntarias = voluntarias.length > 0;
+const categorias = temVoluntarias 
+  ? [...new Set(voluntarias.map(v => v.categoria))] 
+  : [];
 ---
 
 <Layout title="Nebulosa | Quem Somos">
@@ -70,9 +74,10 @@ const categorias = [...new Set(voluntarias.map(v => v.categoria))];
         </p>
       </div>
 
+      <!-- Condicional de Verificação da Tabela -->
       {
-        voluntarias.length === 0 ? (
-          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md">
+        !temVoluntarias ? (
+          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md mb-16">
             <p class="text-xl font-bold text-[#2F0147] mb-2">
               Nenhuma voluntária encontrada no momento.
             </p>

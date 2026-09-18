@@ -2,32 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Papa from 'papaparse';
-
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTOSEjbQJnA9monK7Zy-vRXZjNlvOGK3qg3kZuk-KnkUdNIpl_u0o07fswpxS0vQLf1dZ9QECAzhhY/pub?gid=0&single=true&output=csv";
-
-interface Evento {
-  datas: string;
-  feira: string;
-  dados: string;
-}
-
-let eventos: Evento[] = [];
-
-try {
-  const response = await fetch(SHEET_CSV_URL);
-  const csvText = await response.text();
-
-  const parsed = Papa.parse<Evento>(csvText, {
-    header: true,
-    skipEmptyLines: true,
-  });
-
-  // Filtra linhas totalmente vazias ou sem o nome da feira
-  eventos = parsed.data.filter(e => e.feira && e.feira.trim() !== '');
-} catch (error) {
-  console.error("Erro ao carregar dados do Google Sheets:", error);
-}
 ---
 
 <Layout title="Nebulosa | Cronograma">
@@ -44,52 +18,99 @@ try {
         O projeto Nebulosa oferece apoio no desenvolvimento de projetos para feiras científicas. Se você quer ingressar nesse universo, seguem algumas opções para participar! 
       </p>
 
-      {
-        eventos.length === 0 ? (
-          <div class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md">
-            <p class="text-xl font-bold text-[#2F0147] mb-2">
-              Não há feiras em andamento no momento.
-            </p>
-            <p class="text-sm text-gray-700">
-              Fique de olho em nossas redes sociais e no Discord para novidades em breve!
-            </p>
-          </div>
-        ) : (
-          <div class="w-full overflow-x-auto rounded-2xl shadow-xl border border-[#2F0147]/20 bg-[#FDF8F2]">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-[#2F0147] text-[#F3A446] text-lg font-bold tracking-wider">
-                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/5">Datas</th>
-                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Nome da Feira</th>
-                  <th class="py-4 px-6 border-b border-[#610F7F]/40 w-3/12">Dados</th>
-                </tr>
-              </thead>
-              <tbody class="text-sm font-sans font-medium text-[#2F0147]">
-                {eventos.map((item, index) => (
-                  <tr 
-                    class={`transition-colors duration-200 border-b border-[#2F0147]/10 hover:bg-[#EFE3E8]/80 ${
-                      index % 2 === 0 ? 'bg-[#FDF8F2]' : 'bg-[#F7EEF2]'
-                    }`}
-                  >
-                    <td class="py-4 px-6 font-semibold text-[#610F7F] whitespace-nowrap">
-                      {item.datas}
-                    </td>
-                    <td class="py-4 px-6 font-bold text-[#2F0147]">
-                      {item.feira}
-                    </td>
-                    <td class="py-4 px-6 text-gray-700">
-                      {item.dados}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )
-      }
+      <!-- Mensagem de estado inicial ou quando não há dados -->
+      <div id="no-events" class="w-full max-w-3xl mx-auto p-8 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-md">
+        <p id="no-events-title" class="text-xl font-bold text-[#2F0147] mb-2">
+          Carregando feiras...
+        </p>
+        <p id="no-events-subtitle" class="text-sm text-gray-700">
+          Aguarde um instante enquanto buscamos as informações mais recentes.
+        </p>
+      </div>
+
+      <!-- Tabela renderizada no cliente -->
+      <div id="events-table-container" class="hidden w-full overflow-x-auto rounded-2xl shadow-xl border border-[#2F0147]/20 bg-[#FDF8F2]">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#2F0147] text-[#F3A446] text-lg font-bold tracking-wider">
+              <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/5">Datas</th>
+              <th class="py-4 px-6 border-b border-[#610F7F]/40 w-1/4">Nome da Feira</th>
+              <th class="py-4 px-6 border-b border-[#610F7F]/40 w-3/12">Dados</th>
+            </tr>
+          </thead>
+          <tbody id="events-table-body" class="text-sm font-sans font-medium text-[#2F0147]">
+            <!-- As linhas da tabela serão inseridas aqui dinamicamente -->
+          </tbody>
+        </table>
+      </div>
 
     </main>
 
     <Footer />
   </div>
 </Layout>
+
+<script>
+  import Papa from 'papaparse';
+
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTOSEjbQJnA9monK7Zy-vRXZjNlvOGK3qg3kZuk-KnkUdNIpl_u0o07fswpxS0vQLf1dZ9QECAzhhY/pub?gid=0&single=true&output=csv";
+
+  interface Evento {
+    datas: string;
+    feira: string;
+    dados: string;
+  }
+
+  async function carregarCronograma() {
+    const noEvents = document.getElementById('no-events');
+    const noEventsTitle = document.getElementById('no-events-title');
+    const noEventsSubtitle = document.getElementById('no-events-subtitle');
+    const tableContainer = document.getElementById('events-table-container');
+    const tableBody = document.getElementById('events-table-body');
+
+    try {
+      // Força a atualização no Google Sheets ignorando o cache com &t=Date.now()
+      const response = await fetch(`${SHEET_CSV_URL}&t=${Date.now()}`);
+      const csvText = await response.text();
+
+      const parsed = Papa.parse<Evento>(csvText, {
+        header: true,
+        skipEmptyLines: true,
+      });
+
+      const eventos = parsed.data.filter(e => e.feira && e.feira.trim() !== '');
+
+      if (eventos.length === 0) {
+        if (noEventsTitle) noEventsTitle.innerText = "Não há feiras em andamento no momento.";
+        if (noEventsSubtitle) noEventsSubtitle.innerText = "Fique de olho em nossas redes sociais e no Discord para novidades em breve!";
+      } else {
+        if (tableBody) {
+          tableBody.innerHTML = eventos.map((item, index) => `
+            <tr class="transition-colors duration-200 border-b border-[#2F0147]/10 hover:bg-[#EFE3E8]/80 ${
+              index % 2 === 0 ? 'bg-[#FDF8F2]' : 'bg-[#F7EEF2]'
+            }">
+              <td class="py-4 px-6 font-semibold text-[#610F7F] whitespace-nowrap">
+                ${item.datas || ''}
+              </td>
+              <td class="py-4 px-6 font-bold text-[#2F0147]">
+                ${item.feira || ''}
+              </td>
+              <td class="py-4 px-6 text-gray-700">
+                ${item.dados || ''}
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        if (noEvents) noEvents.classList.add('hidden');
+        if (tableContainer) tableContainer.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados do Google Sheets:", error);
+      if (noEventsTitle) noEventsTitle.innerText = "Não foi possível carregar o cronograma.";
+      if (noEventsSubtitle) noEventsSubtitle.innerText = "Por favor, recarregue a página em alguns instantes.";
+    }
+  }
+
+  carregarCronograma();
+</script>

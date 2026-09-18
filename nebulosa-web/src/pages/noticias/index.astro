@@ -2,43 +2,6 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import Papa from 'papaparse';
-
-const SHEET_NEWS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSFBphLgXDo2hNxvcVQ2vcJyYLplmKVVdtWQxj_9vYrT96mOuATdk6ZZug5LaBlh1oq5ruyA6on0wZy/pub?gid=0&single=true&output=csv";
-
-interface Noticia {
-  slug: string;
-  titulo: string;
-  subtitulo: string;
-  data: string;
-  categoria: string;
-  imagem: string;
-}
-
-function formatDriveUrl(url: string) {
-  if (!url) return "/logo-nebulosa.png";
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    return `https://lh3.googleusercontent.com/d/${match[1]}`;
-  }
-  return url;
-}
-
-let noticias: Noticia[] = [];
-
-try {
-  const response = await fetch(SHEET_NEWS_URL);
-  const csvText = await response.text();
-
-  const parsed = Papa.parse<Noticia>(csvText, {
-    header: true,
-    skipEmptyLines: true,
-  });
-
-  noticias = parsed.data.filter(n => n.titulo && n.titulo.trim() !== '');
-} catch (error) {
-  console.error("Erro ao carregar lista de notícias:", error);
-}
 ---
 
 <Layout title="Nebulosa | Notícias">
@@ -51,31 +14,84 @@ try {
         Notícias
       </h1>
 
-      {noticias.length === 0 ? (
-        <div class="w-full max-w-xl mx-auto my-auto p-6 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-sm">
-          <p class="text-lg font-bold text-[#2F0147] mb-1">
-            Nenhuma notícia encontrada no momento.
-          </p>
-          <p class="text-xs text-gray-700 font-sans">
-            Em breve publicaremos novidades!
-          </p>
-        </div>
-      ) : (
-      
-        <div class="flex flex-col gap-4 w-full my-auto">
-          {noticias.map((item) => (
+      <!-- Estado de carregamento ou sem notícias -->
+      <div id="no-noticias" class="w-full max-w-xl mx-auto my-auto p-6 rounded-2xl bg-[#EFE3E8] border border-[#2F0147]/20 text-center shadow-sm">
+        <p id="no-noticias-title" class="text-lg font-bold text-[#2F0147] mb-1">
+          Carregando notícias...
+        </p>
+        <p id="no-noticias-subtitle" class="text-xs text-gray-700 font-sans">
+          Aguarde um instante enquanto buscamos as novidades!
+        </p>
+      </div>
+
+      <!-- Container onde a lista de notícias será injetada -->
+      <div id="noticias-container" class="hidden flex flex-col gap-4 w-full my-auto"></div>
+
+    </main>
+
+    <Footer />
+  </div>
+</Layout>
+
+<script>
+  import Papa from 'papaparse';
+
+  const SHEET_NEWS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSFBphLgXDo2hNxvcVQ2vcJyYLplmKVVdtWQxj_9vYrT96mOuATdk6ZZug5LaBlh1oq5ruyA6on0wZy/pub?gid=0&single=true&output=csv";
+
+  interface Noticia {
+    slug: string;
+    titulo: string;
+    subtitulo: string;
+    data: string;
+    categoria: string;
+    imagem: string;
+  }
+
+  function formatDriveUrl(url: string) {
+    if (!url) return "/logo-nebulosa.png";
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    }
+    return url;
+  }
+
+  async function carregarNoticias() {
+    const noNoticias = document.getElementById('no-noticias');
+    const noNoticiasTitle = document.getElementById('no-noticias-title');
+    const noNoticiasSubtitle = document.getElementById('no-noticias-subtitle');
+    const noticiasContainer = document.getElementById('noticias-container');
+
+    try {
+      // Evita o cache adicionando o parâmetro de timestamp
+      const response = await fetch(`${SHEET_NEWS_URL}&t=${Date.now()}`);
+      const csvText = await response.text();
+
+      const parsed = Papa.parse<Noticia>(csvText, {
+        header: true,
+        skipEmptyLines: true,
+      });
+
+      const noticias = parsed.data.filter(n => n.titulo && n.titulo.trim() !== '');
+
+      if (noticias.length === 0) {
+        if (noNoticiasTitle) noNoticiasTitle.innerText = "Nenhuma notícia encontrada no momento.";
+        if (noNoticiasSubtitle) noNoticiasSubtitle.innerText = "Em breve publicaremos novidades!";
+      } else {
+        if (noticiasContainer) {
+          noticiasContainer.innerHTML = noticias.map(item => `
             <a 
-              href={`/noticias/${item.slug}`} 
+              href="/noticias/${item.slug || ''}" 
               class="block group transition-transform duration-300 hover:-translate-y-0.5"
             >
               <article class="bg-[#EFE3E8] p-5 rounded-2xl flex flex-col md:flex-row items-center gap-5 shadow-sm group-hover:shadow-md border border-transparent group-hover:border-[#610F7F]/20 transition-all">
                 
                 <div 
-                  class="bg-[#0B032D] rounded-xl  overflow-hidden shrink-0 w-full md:w-[240px] aspect-video"
+                  class="bg-[#0B032D] rounded-xl overflow-hidden shrink-0 w-full md:w-[240px] aspect-video"
                 >
                   <img 
-                    src={formatDriveUrl(item.imagem)} 
-                    alt={item.titulo} 
+                    src="${formatDriveUrl(item.imagem)}" 
+                    alt="${item.titulo || ''}" 
                     class="max-w-full max-h-full object-contain"
                     onerror="this.onerror=null; this.src='/logo-nebulosa.png';"
                   />
@@ -83,28 +99,35 @@ try {
 
                 <div class="flex flex-col justify-center text-center md:text-left space-y-1 w-full">
                   <h2 class="text-xl md:text-2xl font-bold text-[#2F0147] leading-tight group-hover:text-[#610F7F] transition-colors">
-                    {item.titulo}
+                    ${item.titulo || ''}
                   </h2>
                   
-                  {item.subtitulo && (
+                  ${item.subtitulo ? `
                     <p class="text-sm md:text-base text-[#2F0147] font-semibold">
-                      {item.subtitulo}
+                      ${item.subtitulo}
                     </p>
-                  )}
+                  ` : ''}
                   
                   <p class="text-xs text-[#610F7F] font-bold pt-1">
-                    {item.data} {item.categoria && `• ${item.categoria}`}
+                    ${item.data || ''} ${item.categoria ? `• ${item.categoria}` : ''}
                   </p>
                 </div>
 
               </article>
             </a>
-          ))}
-        </div>
-      )}
+          `).join('');
 
-    </main>
+          noticiasContainer.classList.remove('hidden');
+        }
 
-    <Footer />
-  </div>
-</Layout>
+        if (noNoticias) noNoticias.classList.add('hidden');
+      }
+    } catch (error) {
+      console.error("Erro ao carregar lista de notícias:", error);
+      if (noNoticiasTitle) noNoticiasTitle.innerText = "Erro ao carregar notícias.";
+      if (noNoticiasSubtitle) noNoticiasSubtitle.innerText = "Por favor, recarregue a página em instantes.";
+    }
+  }
+
+  carregarNoticias();
+</script>
